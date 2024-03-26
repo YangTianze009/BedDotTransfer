@@ -1,6 +1,6 @@
 import os
 import pickle
-
+import random
 import numpy as np
 import torch as tc
 import tqdm
@@ -11,7 +11,7 @@ from models.deeplearn import PeakDetector
 from evaluators import peak_evaluate as evaluate
 
 
-CUDA = 0
+CUDA = 1
 SEED = 42
 
 MODEL_CONFIG = {
@@ -56,6 +56,13 @@ def plotting_signal(s, y, p, name="none"):
     # plt.title("Noise Level=%s" % name)
     plt.savefig("figures/%s.pdf" % name)
     plt.clf()
+
+
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    tc.manual_seed(seed)
+    tc.cuda.manual_seed_all(seed)
 
 
 class DataReader(tc.utils.data.Dataset):
@@ -199,10 +206,12 @@ def fit(
     model.eval()
     for x, y in test2:
         p = tc.argmax(model(x), -1)[0].cpu().detach().tolist()
-        plotting_signal(x[0].cpu().numpy(), y.cpu()[0].tolist(), p, "Unstable" + noise)
+        plotting_signal(
+            x[0].cpu().numpy(), y.cpu()[0].tolist(), p, "Real_BSG_Test" + noise
+        )
         break
     print(
-        "Test Noise=%s | Unstable | Epoch=%d | %s"
+        "Test Noise=%s | Real_BSG_Test | Epoch=%d | %s"
         % (noise, epoch, "|".join("%s: %.4f" % _ for _ in scores.items()))
     )
     return model
@@ -210,11 +219,20 @@ def fit(
 
 if __name__ == "__main__":
     # for noisy in ["00", "02", "04", "06", "08", "10"]:
+    set_seed(SEED)
     noisy = "00"
     print("Noise Level: %s" % noisy)
-    train = DataReader("datasets/stable_noise%s/simu_10k.npy" % noisy)
-    valid = DataReader("datasets/stable_noise%s/simu_2k.npy" % noisy)
-    test1 = DataReader("datasets/stable_noise%s/simu_5k.npy" % noisy)
-    test2 = DataReader("datasets/unstable_noise%s/simu_5k.npy" % noisy)
+    train = DataReader(
+        "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_10k.npy" % noisy
+    )
+    valid = DataReader(
+        "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_2k.npy" % noisy
+    )
+    test1 = DataReader(
+        "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_5k.npy" % noisy
+    )
+    test2 = DataReader(
+        "datasets/real_BSG_data/envelope_data/extracted_envelope_data_test.npy"
+    )
     model = PeakDetector(**MODEL_CONFIG)
     fit((train, valid, test1, test2), model, noisy, **TRAIN_CONFIG)
