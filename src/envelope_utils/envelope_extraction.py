@@ -9,10 +9,10 @@ Created on Wed Feb 28 17:55:05 2024
 import numpy as np
 from DSP_func import signal_quality_assessment, get_envelope
 
-# data_type = "test"
-# data_path = f"./day_data_{data_type}.npy"
+data_type = "test"
+data_path = f"datasets/real_BSG_data/day_data_{data_type}.npy"
 
-data_path = "../../datasets/stable_noise02/simu_10k.npy"
+# data_path = "datasets/stable_noise00/simu_10k.npy"
 
 #### load dataset
 dataset = np.load(data_path)
@@ -51,8 +51,11 @@ extracted_envelope = np.array(extracted_envelope)
 print(extracted_envelope.shape)
 final_data = np.column_stack((extracted_envelope, good_data_labels))
 print(final_data.shape)
-# np.save(f"extracted_envelope_data_{data_type}.npy", final_data)
 np.save(
-    f"../../datasets/stable_noise02/envelope_data/extracted_envelope_simu_10k.npy",
+    f"datasets/real_BSG_data/envelope_data/extracted_envelope_data_{data_type}.npy",
     final_data,
 )
+# np.save(
+#     f"datasets/stable_noise00/envelope_data/extracted_envelope_simu_10k.npy",
+#     final_data,
+# )
