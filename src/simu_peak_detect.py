@@ -77,7 +77,7 @@ class DataReader(tc.utils.data.Dataset):
         x = self._data[idx][:1000]
         x = (x - x.mean()) / x.std()
         y = [0] * len(x)
-        for idx in find_peaks(x, distance=50)[0].tolist():
+        for idx in find_peaks(x, height=0.45, prominence=0.3, distance=25)[0].tolist():
             y[idx] = 1
         # plotting_signal(x, y)
         return (tc.tensor(x, dtype=tc.float32), tc.tensor(y, dtype=tc.int64))
@@ -218,21 +218,24 @@ def fit(
 
 
 if __name__ == "__main__":
-    # for noisy in ["00", "02", "04", "06", "08", "10"]:
-    set_seed(SEED)
-    noisy = "00"
-    print("Noise Level: %s" % noisy)
-    train = DataReader(
-        "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_10k.npy" % noisy
-    )
-    valid = DataReader(
-        "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_2k.npy" % noisy
-    )
-    test1 = DataReader(
-        "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_5k.npy" % noisy
-    )
-    test2 = DataReader(
-        "datasets/real_BSG_data/envelope_data/extracted_envelope_data_test.npy"
-    )
-    model = PeakDetector(**MODEL_CONFIG)
-    fit((train, valid, test1, test2), model, noisy, **TRAIN_CONFIG)
+    for noisy in ["00", "02", "04", "06", "08", "10"]:
+        set_seed(SEED)
+        # noisy = "04"
+        print("Noise Level: %s" % noisy)
+        train = DataReader(
+            "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_10k.npy"
+            % noisy
+        )
+        valid = DataReader(
+            "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_2k.npy"
+            % noisy
+        )
+        test1 = DataReader(
+            "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_5k.npy"
+            % noisy
+        )
+        test2 = DataReader(
+            "datasets/real_BSG_data/envelope_data/extracted_envelope_data_test.npy"
+        )
+        model = PeakDetector(**MODEL_CONFIG)
+        fit((train, valid, test1, test2), model, noisy, **TRAIN_CONFIG)
