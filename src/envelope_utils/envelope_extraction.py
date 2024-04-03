@@ -12,8 +12,8 @@ from DSP_func import signal_quality_assessment, get_envelope
 # data_type = "test"
 # data_path = f"datasets/real_BSG_data/day_data_{data_type}.npy"
 
-noise = "10"
-data_path = f"datasets/stable_noise{noise}/simu_5k.npy"
+noise = "06"
+data_path = f"datasets/stable_noise{noise}/simu_10k.npy"
 
 #### load dataset
 dataset = np.load(data_path)
@@ -53,10 +53,14 @@ print(extracted_envelope.shape)
 final_data = np.column_stack((extracted_envelope, good_data_labels))
 print(final_data.shape)
 # np.save(
-#     f"datasets/real_BSG_data/envelope_data/extracted_envelope_data_{data_type}.npy",
+#     f"datasets/testing/extracted_envelope_data_{data_type}.npy",
 #     final_data,
 # )
 np.save(
-    f"datasets/stable_noise{noise}/envelope_data/extracted_envelope_simu_5k.npy",
+    f"datasets/testing/extracted_envelope_data_10k.npy",
     final_data,
 )
+# np.save(
+#     f"datasets/stable_noise{noise}/envelope_data/extracted_envelope_simu_5k.npy",
+#     final_data,
+# )
