@@ -234,8 +234,6 @@ if __name__ == "__main__":
             "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_5k.npy"
             % noisy
         )
-        test2 = DataReader(
-            "datasets/real_BSG_data/envelope_data/extracted_envelope_data_test.npy"
-        )
+        test2 = DataReader("datasets/testing/extracted_envelope_data_test.npy")
         model = PeakDetector(**MODEL_CONFIG)
         fit((train, valid, test1, test2), model, noisy, **TRAIN_CONFIG)

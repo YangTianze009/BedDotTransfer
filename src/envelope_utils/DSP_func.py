@@ -17,7 +17,7 @@ def moving_window_integration(signal, fs):
 
     # Initialize result and window size for integration
     result = signal.copy()
-    win_size = round(0.010 * fs)
+    win_size = round(0.20 * fs)
     sum = 0
 
     # Calculate the sum for the first N terms

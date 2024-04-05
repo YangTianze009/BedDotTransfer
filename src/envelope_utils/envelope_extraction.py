@@ -12,7 +12,7 @@ from DSP_func import signal_quality_assessment, get_envelope
 # data_type = "test"
 # data_path = f"datasets/real_BSG_data/day_data_{data_type}.npy"
 
-noise = "06"
+noise = "10"
 data_path = f"datasets/stable_noise{noise}/simu_10k.npy"
 
 #### load dataset
