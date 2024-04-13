@@ -13,7 +13,7 @@ from statsmodels.tsa.stattools import acf
 import matplotlib.pyplot as plt
 
 
-def moving_window_integration(signal, fs, window=0.040):
+def moving_window_integration(signal, fs, window):
 
     # Initialize result and window size for integration
     result = signal.copy()
