@@ -218,7 +218,7 @@ def fit(
 
 
 if __name__ == "__main__":
-    window = "0.040"
+    window = "0.300"
     for noisy in ["00", "02", "04", "06", "08", "10"]:
         set_seed(SEED)
         # noisy = "04"
