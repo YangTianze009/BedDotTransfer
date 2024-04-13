@@ -13,11 +13,11 @@ from statsmodels.tsa.stattools import acf
 import matplotlib.pyplot as plt
 
 
-def moving_window_integration(signal, fs):
+def moving_window_integration(signal, fs, window=0.040):
 
     # Initialize result and window size for integration
     result = signal.copy()
-    win_size = round(0.20 * fs)
+    win_size = round(window * fs)
     sum = 0
 
     # Calculate the sum for the first N terms
@@ -34,7 +34,9 @@ def moving_window_integration(signal, fs):
     return result
 
 
-def get_envelope(x, Fs, low, high, m_wave="db12", denoised_method="bandpass"):
+def get_envelope(
+    x, Fs, low, high, window=0.040, m_wave="db12", denoised_method="bandpass"
+):
     x = (x - np.mean(x)) / np.std(x)
     if denoised_method == "DWT":
         denoised_sig = wavelet_reconstruction(x=x, fs=Fs, low=low, high=high)
@@ -45,7 +47,7 @@ def get_envelope(x, Fs, low, high, m_wave="db12", denoised_method="bandpass"):
     z = hilbert(denoised_sig)  # form the analytical signal
     envelope = np.abs(z)
 
-    smoothed_envelope = moving_window_integration(signal=envelope, fs=Fs)
+    smoothed_envelope = moving_window_integration(signal=envelope, fs=Fs, window=window)
     smoothed_envelope = (smoothed_envelope - np.mean(smoothed_envelope)) / np.std(
         smoothed_envelope
     )
