@@ -218,22 +218,24 @@ def fit(
 
 
 if __name__ == "__main__":
+    window = "0.040"
     for noisy in ["00", "02", "04", "06", "08", "10"]:
         set_seed(SEED)
         # noisy = "04"
-        print("Noise Level: %s" % noisy)
+        print(
+            f"Noise Level: {noisy} | Window Size: {window} | find_peak() ARGS: height=0.45, prominence=0.3, distance=25"
+        )
         train = DataReader(
-            "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_10k.npy"
-            % noisy
+            f"datasets/stable_noise{noisy}/envelope_data/{window.replace('.','_')}/extracted_envelope_data_10k.npy"
         )
         valid = DataReader(
-            "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_2k.npy"
-            % noisy
+            f"datasets/stable_noise{noisy}/envelope_data/{window.replace('.','_')}/extracted_envelope_data_2k.npy"
         )
         test1 = DataReader(
-            "datasets/stable_noise%s/envelope_data/extracted_envelope_simu_5k.npy"
-            % noisy
+            f"datasets/stable_noise{noisy}/envelope_data/{window.replace('.','_')}/extracted_envelope_data_5k.npy"
         )
-        test2 = DataReader("datasets/testing/extracted_envelope_data_test.npy")
+        test2 = DataReader(
+            f"datasets/real_BSG_data/envelope_data/{window.replace('.','_')}/envelope_day_data_test.npy"
+        )
         model = PeakDetector(**MODEL_CONFIG)
         fit((train, valid, test1, test2), model, noisy, **TRAIN_CONFIG)
