@@ -27,21 +27,21 @@ def main():
     for noise in noise_levels:
         for split in data_split:
             data_path = f"datasets/stable_noise{noise}/simu_{split}k.npy"
-
-            #### load dataset
-            dataset = np.load(data_path)
-
-            ### obtain signal and discard label
-            data = dataset[:, :1000]
-            data_labels = dataset[:, 1000:]
-
-            ##### pre-define band pass filter cutoff frequency
-            low = 1
-            high = 15
-
-            ##### set sampling rate
-            Fs = 100
             for window in window_size:
+                #### load dataset
+                dataset = np.load(data_path)
+
+                ### obtain signal and discard label
+                data = dataset[:, :1000]
+                data_labels = dataset[:, 1000:]
+
+                ##### pre-define band pass filter cutoff frequency
+                low = 1
+                high = 15
+
+                ##### set sampling rate
+                Fs = 100
+
                 good_data = []
                 extracted_envelope = []
                 good_data_labels = []
@@ -60,24 +60,24 @@ def main():
                         )
                         extracted_envelope.append(temp_envelope)
 
-                ####obtain all data with good quality
-                good_data = np.array(good_data)
-                #### extracted envelope from all good quality data
-                extracted_envelope = np.array(extracted_envelope)
-                print(extracted_envelope.shape)
-                final_data = np.column_stack((extracted_envelope, good_data_labels))
-                print(final_data.shape)
-                create_directory(
-                    f"datasets/stable_noise{noise}/envelope_data/{window.replace('.','_')}"
-                )
-                np.save(
-                    f"datasets/stable_noise{noise}/envelope_data/{window.replace('.','_')}/extracted_envelope_data_{split}k.npy",
-                    final_data,
-                )
-                print(
-                    "File saved at : ",
-                    f"datasets/stable_noise{noise}/envelope_data/{window.replace('.','_')}",
-                )
+                    ####obtain all data with good quality
+                    good_data = np.array(good_data)
+                    #### extracted envelope from all good quality data
+                    extracted_envelope = np.array(extracted_envelope)
+                    print(extracted_envelope.shape)
+                    final_data = np.column_stack((extracted_envelope, good_data_labels))
+                    print(final_data.shape)
+                    create_directory(
+                        f"datasets/stable_noise{noise}/envelope_data/{window.replace('.','_')}"
+                    )
+                    np.save(
+                        f"datasets/stable_noise{noise}/envelope_data/{window.replace('.','_')}/extracted_envelope_data_{split}k.npy",
+                        final_data,
+                    )
+                    print(
+                        "File saved at : ",
+                        f"datasets/stable_noise{noise}/envelope_data/{window.replace('.','_')}",
+                    )
 
 
 if __name__ == "__main__":
